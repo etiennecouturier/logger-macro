@@ -40,7 +40,6 @@ object ClassLogger {
                   $body
                 }"""
               case other =>
-                println("other")
                 other
             }
 
