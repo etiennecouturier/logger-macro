@@ -1,3 +1,5 @@
+package com.etienne
+
 object LoggingExample {
 
   @MethodLogger

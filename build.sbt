@@ -1,3 +1,4 @@
+
 name := "macros_examples"
 
 version := "1.0"
@@ -6,7 +7,10 @@ scalaVersion := "2.11.7"
 
 lazy val macros_implementations = project
 
-lazy val root = (project in file(".")).aggregate(macros_implementations).dependsOn(macros_implementations)
+lazy val root = (project in file("."))
+  .aggregate(macros_implementations)
+  .dependsOn(macros_implementations)
+  .enablePlugins(PlayScala)
 
 val paradiseVersion = "2.1.0-M5"
 

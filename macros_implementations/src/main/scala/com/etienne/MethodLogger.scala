@@ -1,3 +1,5 @@
+package com.etienne
+
 import scala.annotation.StaticAnnotation
 import scala.language.experimental.macros
 import scala.reflect.macros.blackbox
