@@ -1,0 +1,33 @@
+import scala.annotation.StaticAnnotation
+import scala.language.experimental.macros
+import scala.reflect.macros.blackbox
+
+class MethodLogger extends StaticAnnotation {
+  def macroTransform(annottees: Any*) = macro MethodLogger.impl
+}
+
+object MethodLogger {
+
+  def impl(c: blackbox.Context)(annottees: c.Expr[Any]*): c.Expr[Any] = {
+    import c.universe._
+
+    val result = {
+      annottees.map(_.tree).toList match {
+        case method @ DefDef(mods, methodName, tpes, paramLists : scala.List[scala.List[ValDef]], returnType, body) :: Nil =>
+          val params = paramLists.flatten.map(p => (p.name.encodedName.toString, p.tpt.toString, p.name))
+
+          q"""$mods def $methodName[..$tpes](...$paramLists): $returnType =  {
+            print("Method called: ")
+            print(${c.getClass.toString} + "@")
+            println(${methodName.decodedName.toString})
+            println("with parameters:")
+            $params.foreach(x => println(x._1.toString + ": " + x._2.toString + " = " + x._3.toString))
+            $body
+          }"""
+        case _ => c.abort(c.enclosingPosition, "Annotation @Benchmark can be used only with methods")
+      }
+    }
+    c.Expr[Any](result)
+  }
+
+}
