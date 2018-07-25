@@ -18,13 +18,13 @@ object MethodLogger {
           val paramQuote =
             if (params.nonEmpty) {
               q"""
-                     println("with parameters:")
-                     $params.foreach(x => println(x._1.toString + ": " + x._2.toString + " = " + x._3.toString))
-                   """
+               println("with parameters:")
+               $params.foreach(x => println(x._1.toString + ": " + x._2.toString + " = " + x._3.toString))
+             """
             } else {
               q"""
-                     println("no parameters")
-                   """
+               println("no parameters")
+             """
             }
           q"""$mods def $methodName[..$tpes](...$paramLists): $returnType =  {
             print("Method called: ")

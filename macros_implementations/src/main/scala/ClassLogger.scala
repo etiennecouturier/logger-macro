@@ -11,14 +11,16 @@ object ClassLogger {
   def impl(c: blackbox.Context)(annottees: c.Expr[Any]*): c.Expr[Any] = {
     import c.universe._
 
-    print("beginning")
     val result = {
       annottees.map(_.tree).toList match {
         case q"$mods class $tpname[..$tparams] $ctorMods(...$paramss) { $self => ..$stats }" :: Nil => {
           val decoratedStats =
             stats map {
               case _@DefDef(mo, methodName, tpes, paramLists: scala.List[scala.List[ValDef]], returnType, body) =>
-                val params = paramLists.flatten.map(p => (p.name.encodedName.toString, p.tpt.toString, p.name))
+                val params = paramLists.flatten.map {p =>
+                  (p.name.encodedName.toString, p.tpt.toString, p.name)
+                }
+
                 val paramQuote =
                   if (params.nonEmpty) {
                     q"""
@@ -30,9 +32,9 @@ object ClassLogger {
                      println("no parameters")
                    """
                   }
-                q"""$mods def $methodName[..$tpes](...$paramLists): $returnType =  {
+                q"""$mo def $methodName[..$tpes](...$paramLists): $returnType =  {
                   print("Method called: ")
-                  print(${c.getClass.toString} + "@")
+                  print(${tpname.toString} + "@")
                   println(${methodName.decodedName.toString})
                   $paramQuote
                   $body
