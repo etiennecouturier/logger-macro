@@ -1,11 +1,11 @@
 @ClassLogger
 class ClassLogginExample {
 
-  def help = {
-    println("help")
+  def help(str: String) = {
+    println(str)
   }
 
-  def wanted = {
+  def wanted() = {
     println("wanted")
   }
 

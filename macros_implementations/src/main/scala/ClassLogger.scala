@@ -18,9 +18,23 @@ object ClassLogger {
           val decoratedStats =
             stats map {
               case _@DefDef(mo, methodName, tpes, paramLists: scala.List[scala.List[ValDef]], returnType, body) =>
-                println("it was a method")
-                q"""$mo def $methodName[..$tpes](...$paramLists): $returnType =  {
-                  print("Decorate class method")
+                val params = paramLists.flatten.map(p => (p.name.encodedName.toString, p.tpt.toString, p.name))
+                val paramQuote =
+                  if (params.nonEmpty) {
+                    q"""
+                     println("with parameters:")
+                     $params.foreach(x => println(x._1.toString + ": " + x._2.toString + " = " + x._3.toString))
+                   """
+                  } else {
+                    q"""
+                     println("no parameters")
+                   """
+                  }
+                q"""$mods def $methodName[..$tpes](...$paramLists): $returnType =  {
+                  print("Method called: ")
+                  print(${c.getClass.toString} + "@")
+                  println(${methodName.decodedName.toString})
+                  $paramQuote
                   $body
                 }"""
               case other =>
