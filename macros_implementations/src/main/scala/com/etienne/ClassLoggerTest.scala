@@ -2,6 +2,7 @@ package com.etienne
 
 import scala.annotation.StaticAnnotation
 import scala.language.experimental.macros
+import scala.reflect.api.Trees
 import scala.reflect.macros.blackbox
 
 class ClassLoggerTest extends StaticAnnotation {
@@ -15,52 +16,9 @@ object ClassLoggerTest {
 
     c.Expr[Any]({
       annottees.map(_.tree).toList match {
-        case clazz@q"$mods class $tpname[..$tparams] $ctorMods(...$paramss) { $self => ..$stats }" :: Nil =>
-          //          val decoratedStats =
-          //            stats map {
-          //              case field@ValDef(mod, name@TermName("dog"), Ident(TypeName("Person")), rhs) =>
-          ////                println(showRaw(mod))
-          ////                println(showRaw(name))
-          ////                println(showRaw(rhs))
-          //                println(showRaw(field))
-          //                ValDef(mod, TermName("logger"), Ident(TypeName("Person")), rhs)
-          //              case other =>
-          //                other
-          //            }
+        case _@q"$mods class $tpname[..$tparams] $ctorMods(...$paramss) { $self => ..$stats }" :: Nil =>
 
-          val newPerson: Either[c.universe.TermName, c.universe.ValDef] =
-            stats.find {
-              case ValDef(_, _, Ident(TypeName("Person")), _) => true
-              case _ => false
-            }
-              .map {
-                case field@ValDef(mod, name, tpt, rhs) => Left(name)
-              }.getOrElse(
-              Right(
-                ValDef(Modifiers(),
-                  TermName("logger"),
-                  Ident(TypeName("Person")),
-                  Apply(Select(Select(Ident(TermName("com")),
-                    TermName("etienne")), TermName("Person")),
-                    List(Literal(Constant("Peter")), Literal(Constant(5)))
-                  )
-                )
-              )
-            )
-
-          val personName = newPerson match {
-            case Left(name) => q"""$name"""
-            case Right(ValDef(_, name, _, _)) => q"""$name"""
-          }
-
-//          println(s"here it is $personName")
-
-          val field = newPerson match {
-            case Left(_) => q""""""
-            case Right(person) => person
-          }
-
-          println(newPerson)
+          val (personName, field) = getLogger(stats, c)
 
           q"""$mods class $tpname[..$tparams] $ctorMods(...$paramss) {
             $self =>
@@ -73,4 +31,30 @@ object ClassLoggerTest {
     })
   }
 
+  private def getLogger(stats: Seq[Trees#Tree], c: blackbox.Context): (c.universe.Tree, c.universe.Tree) = {
+    import c.universe._
+
+    val newPerson: Either[c.universe.TermName, c.universe.ValDef] =
+      stats.find {
+        case ValDef(_, _, Ident(TypeName("Person")), _) => true
+        case _ => false
+      }
+        .map {
+          case field@ValDef(mod, name, tpt, rhs) => Left(name)
+        }.getOrElse(
+        Right(
+          q"""val logger: Person = Person("Peter", 5)""".asInstanceOf[ValDef]
+        ))
+
+    val personName = newPerson match {
+      case Left(name) => q"""$name"""
+      case Right(ValDef(_, name, _, _)) => q"""$name"""
+    }
+
+    val field = newPerson match {
+      case Left(_) => q""""""
+      case Right(person) => person
+    }
+    (personName, field)
+  }
 }

@@ -6,10 +6,11 @@ object MainObj extends App {
   cle.wanted()
 }
 
-@ClassLoggerTest
+@ClassLogger
 class ClassLogginExample {
 
-  val dog: Person = com.etienne.Person("Peter", 5)
+  import play.api.Logger
+  private val logger = Logger(this.getClass)
 
   def help(str: String)(h: Int): Unit = {
     println(str)
