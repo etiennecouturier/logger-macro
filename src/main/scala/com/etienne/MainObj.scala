@@ -9,8 +9,8 @@ object MainObj extends App {
 @ClassLogger
 class ClassLogginExample {
 
-  import play.api.Logger
-  private val logger = Logger(this.getClass)
+  /*import play.api.Logger
+  private val logger = Logger(this.getClass)*/
 
   def help(str: String)(h: Int): Unit = {
     println(str)

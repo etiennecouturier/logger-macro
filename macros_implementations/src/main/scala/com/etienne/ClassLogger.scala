@@ -17,6 +17,8 @@ object ClassLogger {
     c.Expr[Any]({
       annottees.map(_.tree).toList match {
         case q"$mods class $tpname[..$tparams] $ctorMods(...$paramss) { $self => ..$stats }" :: Nil =>
+          val (loggerName, loggerField) = getLogger(stats, c)
+
           val decoratedStats =
             stats map {
               case _@DefDef(mo, methodName, tpes, paramLists: scala.List[scala.List[ValDef]], returnType, body) =>
@@ -27,30 +29,26 @@ object ClassLogger {
                 val paramQuote =
                   if (params.nonEmpty) {
                     q"""
-                     logger.debug("with parameters:" + $params.map(x => (x._1.toString + ": " + x._2.toString + " = " + x._3.toString)).toString)
+                     $loggerName.debug("with parameters:" + $params.map(x => (x._1.toString + ": " + x._2.toString + " = " + x._3.toString)).toString)
                    """
                   } else {
                     q"""
-                     logger.debug("no parameters")
+                     $loggerName.debug("no parameters")
                    """
                   }
                 q"""$mo def $methodName[..$tpes](...$paramLists): $returnType =  {
-                  logger.debug("Method called: " + ${tpname.toString} + "@" + ${methodName.decodedName.toString})
+                  $loggerName.debug("Method called: " + ${tpname.toString} + "@" + ${methodName.decodedName.toString})
                   $paramQuote
                   $body
                 }"""
-              case field@ ValDef(_, name, q"""Logger""", _) =>
-                println(name.decodedName)
-                field
-              case other => other
+              case notDef => notDef
             }
 
-          val (loggerName, loggerField) = getLogger(stats, c)
           q"""$mods class $tpname[..$tparams] $ctorMods(...$paramss) {
             $self =>
-             $loggerField
-
-            ..$decoratedStats
+             import play.api.Logger
+              $loggerField
+             ..$decoratedStats
           }"""
         case _ => c.abort(c.enclosingPosition, "Annotation @ClassLogger can only be used with classes")
       }
