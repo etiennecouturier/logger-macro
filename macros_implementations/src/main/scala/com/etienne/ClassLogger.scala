@@ -4,7 +4,7 @@ import scala.annotation.StaticAnnotation
 import scala.language.experimental.macros
 import scala.reflect.macros.blackbox
 
-class ClassLogger extends StaticAnnotation {
+class ClassLogger(loggerName: String) extends StaticAnnotation {
   def macroTransform(annottees: Any*) = macro ClassLogger.impl
 }
 
