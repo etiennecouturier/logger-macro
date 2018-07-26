@@ -4,7 +4,7 @@ import scala.annotation.StaticAnnotation
 import scala.language.experimental.macros
 import scala.reflect.macros.blackbox
 
-class ClassLogger(loggerName: String) extends StaticAnnotation {
+class ClassLogger extends StaticAnnotation {
   def macroTransform(annottees: Any*) = macro ClassLogger.impl
 }
 
@@ -41,20 +41,28 @@ object ClassLogger {
                   $paramQuote
                   $body
                 }"""
+              case field@q"""val $loggerName: Logger = $loggerExpression""" =>
+                println("field found")
+                field
               case other => other
             }
 
-          val finalStats =
-            decoratedStats :+
-              q"""
-                 import play.api.Logger
-                 protected val logger = Logger(this.getClass)
-              """
+//          val finalStats =
+//            decoratedStats :+
+//              q"""
+//                 import play.api.Logger
+//                 private val logger = Logger(this.getClass)
+//              """
 
           q"""$mods class $tpname[..$tparams] $ctorMods(...$paramss) {
-            $self => ..$finalStats
+            $self =>
+
+             import play.api.Logger
+             private val logger = Logger(this.getClass)
+
+            ..$decoratedStats
           }"""
-        case _ => c.abort(c.enclosingPosition, "Annotation @TalkingAnimal can be used only with case classes which extends Animal trait")
+        case _ => c.abort(c.enclosingPosition, "Annotation @ClassLogger can only be used with classes")
       }
     }
     c.Expr[Any](result)
