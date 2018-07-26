@@ -10,7 +10,7 @@ lazy val macros_implementations = project
 lazy val root = (project in file("."))
   .aggregate(macros_implementations)
   .dependsOn(macros_implementations)
-  .enablePlugins(PlayScala)
+//  .enablePlugins(PlayScala)
 
 val paradiseVersion = "2.1.0-M5"
 

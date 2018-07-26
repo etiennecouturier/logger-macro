@@ -1,14 +1,15 @@
 package com.etienne
 
 object MainObj extends App {
-  //  LoggingExample.prettyPrintList(Person("Peter", 6), "mrd")
   val cle = new ClassLogginExample
   cle.help("help")(3)
   cle.wanted()
 }
 
-@ClassLogger
+@ClassLoggerTest
 class ClassLogginExample {
+
+//  val dog: Person = com.etienne.Person("Peter", 5)
 
   def help(str: String)(h: Int): Unit = {
     println(str)

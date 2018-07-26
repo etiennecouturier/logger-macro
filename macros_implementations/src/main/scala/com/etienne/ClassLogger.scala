@@ -13,7 +13,7 @@ object ClassLogger {
   def impl(c: blackbox.Context)(annottees: c.Expr[Any]*): c.Expr[Any] = {
     import c.universe._
 
-    val result = {
+    c.Expr[Any]({
       annottees.map(_.tree).toList match {
         case q"$mods class $tpname[..$tparams] $ctorMods(...$paramss) { $self => ..$stats }" :: Nil =>
           val decoratedStats =
@@ -26,8 +26,7 @@ object ClassLogger {
                 val paramQuote =
                   if (params.nonEmpty) {
                     q"""
-                     logger.debug("with parameters:")
-                     $params.foreach(x => logger.debug(x._1.toString + ": " + x._2.toString + " = " + x._3.toString))
+                     logger.debug("with parameters:" + $params.map(x => (x._1.toString + ": " + x._2.toString + " = " + x._3.toString)).toString)
                    """
                   } else {
                     q"""
@@ -39,12 +38,11 @@ object ClassLogger {
                   $paramQuote
                   $body
                 }"""
-              case field@q"""val $loggerName: Logger = $loggerExpression""" =>
-                println("field found")
+              case field@ ValDef(_, name, q"""Logger""", _) =>
+                println(name.decodedName)
                 field
               case other => other
             }
-
           q"""$mods class $tpname[..$tparams] $ctorMods(...$paramss) {
             $self =>
 
@@ -55,8 +53,7 @@ object ClassLogger {
           }"""
         case _ => c.abort(c.enclosingPosition, "Annotation @ClassLogger can only be used with classes")
       }
-    }
-    c.Expr[Any](result)
+    })
   }
 
 }
