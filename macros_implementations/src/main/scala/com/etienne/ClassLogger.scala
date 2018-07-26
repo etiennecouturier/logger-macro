@@ -35,9 +35,7 @@ object ClassLogger {
                    """
                   }
                 q"""$mo def $methodName[..$tpes](...$paramLists): $returnType =  {
-                  logger.debug("Method called: ")
-                  logger.debug(${tpname.toString} + "@")
-                  logger.debug(${methodName.decodedName.toString})
+                  logger.debug("Method called: " + ${tpname.toString} + "@" + ${methodName.decodedName.toString})
                   $paramQuote
                   $body
                 }"""
@@ -46,13 +44,6 @@ object ClassLogger {
                 field
               case other => other
             }
-
-//          val finalStats =
-//            decoratedStats :+
-//              q"""
-//                 import play.api.Logger
-//                 private val logger = Logger(this.getClass)
-//              """
 
           q"""$mods class $tpname[..$tparams] $ctorMods(...$paramss) {
             $self =>

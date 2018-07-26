@@ -3,17 +3,14 @@ package com.etienne
 object MainObj extends App {
   //  LoggingExample.prettyPrintList(Person("Peter", 6), "mrd")
   val cle = new ClassLogginExample
-  cle.help("help")
+  cle.help("help")(3)
   cle.wanted()
 }
 
 @ClassLogger
 class ClassLogginExample {
 
-//  import play.api.Logger
-//  private val logger: Logger = Logger(this.getClass)
-
-  def help(str: String): Unit = {
+  def help(str: String)(h: Int): Unit = {
     println(str)
   }
 
