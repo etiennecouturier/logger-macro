@@ -28,13 +28,13 @@ object ClassLoggerTest {
           //                other
           //            }
 
-          val newPerson: Either[String, c.universe.ValDef] =
+          val newPerson: Either[c.universe.TermName, c.universe.ValDef] =
             stats.find {
               case ValDef(_, _, Ident(TypeName("Person")), _) => true
               case _ => false
             }
               .map {
-                case field@ValDef(mod, name, tpt, rhs) => Left(name.decodedName.toString)
+                case field@ValDef(mod, name, tpt, rhs) => Left(name)
               }.getOrElse(
               Right(
                 ValDef(Modifiers(),
@@ -49,9 +49,11 @@ object ClassLoggerTest {
             )
 
           val personName = newPerson match {
-            case Left(name) => name
-            case Right(ValDef(_, name, _, _)) => name.decodedName.toString
+            case Left(name) => q"""$name"""
+            case Right(ValDef(_, name, _, _)) => q"""$name"""
           }
+
+//          println(s"here it is $personName")
 
           val field = newPerson match {
             case Left(_) => q""""""
@@ -62,11 +64,8 @@ object ClassLoggerTest {
 
           q"""$mods class $tpname[..$tparams] $ctorMods(...$paramss) {
             $self =>
-
-              $field
-
-             logger.age
-
+             $field
+             $personName.age
             ..$stats
           }"""
         case _ => c.abort(c.enclosingPosition, "Annotation @ClassLogger can only be used with classes")

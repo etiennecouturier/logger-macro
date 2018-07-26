@@ -9,7 +9,7 @@ object MainObj extends App {
 @ClassLoggerTest
 class ClassLogginExample {
 
-//  val dog: Person = com.etienne.Person("Peter", 5)
+  val dog: Person = com.etienne.Person("Peter", 5)
 
   def help(str: String)(h: Int): Unit = {
     println(str)
