@@ -1,4 +1,4 @@
-package com.etienne
+package coms.etiennes
 
 import scala.annotation.StaticAnnotation
 import scala.language.experimental.macros
@@ -21,7 +21,8 @@ object ClassLogger {
 
           val decoratedStats =
             stats map {
-              case _@DefDef(mo, methodName, tpes, paramLists: scala.List[scala.List[ValDef]], returnType, body) =>
+              case _@DefDef(mo@Modifiers(_, _, annotations), methodName, tpes, paramLists: scala.List[scala.List[ValDef]], returnType, body)
+                if !annotations.exists(_.equalsStructure(q"""new NoLogging""")) =>
                 val params = paramLists.flatten.map { p =>
                   (p.name.encodedName.toString, p.tpt.toString, p.name)
                 }
@@ -54,7 +55,6 @@ object ClassLogger {
       }
     })
   }
-
 
   private def getLogger(stats: Seq[Trees#Tree], c: blackbox.Context): (c.universe.Tree, c.universe.Tree) = {
     import c.universe._

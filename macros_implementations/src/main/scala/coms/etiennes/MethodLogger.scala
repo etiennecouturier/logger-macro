@@ -1,4 +1,4 @@
-package com.etienne
+package coms.etiennes
 
 import scala.annotation.StaticAnnotation
 import scala.language.experimental.macros
