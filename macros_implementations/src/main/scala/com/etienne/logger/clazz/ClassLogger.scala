@@ -1,4 +1,4 @@
-package coms.etiennes
+package com.etienne.logmacro
 
 import scala.annotation.StaticAnnotation
 import scala.language.experimental.macros
@@ -16,14 +16,14 @@ object ClassLogger {
 
     c.Expr[Any]({
       annottees.map(_.tree).toList match {
-        case q"$mods class $tpname[..$tparams] $ctorMods(...$paramss) { $self => ..$stats }" :: Nil =>
-          val (loggerName, loggerField) = getLogger(stats, c)
+        case q"$mods class $className[..$typeParams] $ctorMods(...$classParams) { $self => ..$classBody }" :: Nil =>
+          val (loggerName, loggerField) = getLogger(classBody, c)
 
-          val decoratedStats =
-            stats map {
-              case _@DefDef(mo@Modifiers(_, _, annotations), methodName, tpes, paramLists: scala.List[scala.List[ValDef]], returnType, body)
+          val decoratedBody =
+            classBody map {
+              case _@DefDef(mo@Modifiers(_, _, annotations), methodName, types, methodParams: scala.List[scala.List[ValDef]], returnType, methodBody)
                 if !annotations.exists(_.equalsStructure(q"""new NoLogging""")) =>
-                val params = paramLists.flatten.map { p =>
+                val params = methodParams.flatten.map { p =>
                   (p.name.encodedName.toString, p.tpt.toString, p.name)
                 }
 
@@ -37,19 +37,19 @@ object ClassLogger {
                      $loggerName.debug("no parameters")
                    """
                   }
-                q"""$mo def $methodName[..$tpes](...$paramLists): $returnType =  {
-                  $loggerName.debug("Method called: " + ${tpname.toString} + "@" + ${methodName.decodedName.toString})
+                q"""$mo def $methodName[..$types](...$methodParams): $returnType =  {
+                  $loggerName.debug("Method called: " + ${className.toString} + "@" + ${methodName.decodedName.toString})
                   $paramQuote
-                  $body
+                  $methodBody
                 }"""
               case notDef => notDef
             }
 
-          q"""$mods class $tpname[..$tparams] $ctorMods(...$paramss) {
+          q"""$mods class $className[..$typeParams] $ctorMods(...$classParams) {
             $self =>
              import play.api.Logger
               $loggerField
-             ..$decoratedStats
+             ..$decoratedBody
           }"""
         case _ => c.abort(c.enclosingPosition, "Annotation @ClassLogger can only be used with classes")
       }

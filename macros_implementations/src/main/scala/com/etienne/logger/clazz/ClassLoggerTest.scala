@@ -1,4 +1,4 @@
-package coms.etiennes
+package com.etienne.logmacro
 
 import scala.annotation.StaticAnnotation
 import scala.language.experimental.macros
