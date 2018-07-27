@@ -1,6 +1,6 @@
 package com.etienne
 
-import coms.etiennes.{ClassLogger, NoLogging}
+import com.etienne.logger.clazz.{ClassLogger, NoLogging}
 
 object MainObj extends App {
   val cle = new ClassLogginExample
@@ -10,7 +10,7 @@ object MainObj extends App {
 }
 
 @ClassLogger
-class ClassLogginExample {
+class ClassLogginExample() {
 
 //  import play.api.Logger
 //  private val hallo = Logger(this.getClass)

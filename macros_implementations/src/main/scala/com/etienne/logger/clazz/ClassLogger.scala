@@ -1,4 +1,4 @@
-package com.etienne.logmacro
+package com.etienne.logger.clazz
 
 import scala.annotation.StaticAnnotation
 import scala.language.experimental.macros
@@ -65,7 +65,7 @@ object ClassLogger {
         case _ => false
       }
         .map {
-          case field@ValDef(mod, name, tpt, rhs) => Left(name)
+          case _@ValDef(_, name, _, _) => Left(name)
         }.getOrElse(
         Right(
           q"""val logger = Logger(this.getClass)""".asInstanceOf[ValDef]
