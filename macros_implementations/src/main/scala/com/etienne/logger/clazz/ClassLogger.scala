@@ -95,6 +95,9 @@ object ClassLogger {
             objectBody map {
               case _@DefDef(mo@Modifiers(_, _, annotations), methodName, types, methodParams: scala.List[scala.List[ValDef]], returnType, methodBody)
                 if !annotations.exists(_.equalsStructure(q"""new NoLogging""")) =>
+
+                println(showRaw(methodBody))
+
                 val params = methodParams.flatten.map { p =>
                   (p.name.encodedName.toString, p.tpt.toString, p.name)
                 }
