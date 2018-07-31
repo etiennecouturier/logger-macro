@@ -1,6 +1,6 @@
 package com.etienne
 
-import com.etienne.logger.clazz.{ClassLogger, NoLogging}
+import com.etienne.logger.clazz.{ClassLogger, ClassLoggerTest, NoLogging}
 
 object MainObj extends App {
 //  val cle = new ClassLogginExample
@@ -8,13 +8,15 @@ object MainObj extends App {
 //  cle.wanted()
 //  cle.noLog()
 
-  ClassLogginExample.help("help")(3)
-  ClassLogginExample.wanted()
-  ClassLogginExample.noLog()
+//  ClassLogginExample.help("help")(3)
+//  ClassLogginExample.wanted()
+//  ClassLogginExample.noLog()
+
+  val l = new ClassLogginExample()
 }
 
-@ClassLogger
-object ClassLogginExample {
+@ClassLoggerTest
+class ClassLogginExample {
 
 //  import play.api.Logger
 //  private val hallo = Logger(this.getClass)
@@ -24,12 +26,13 @@ object ClassLogginExample {
   }
 
   def wanted(): Unit = {
+    noLog(Person("hu", 3))
     println("wanted")
   }
 
-  @NoLogging
-  def noLog(): Unit = {
-    println("noLog")
+//  @NoLogging
+  def noLog(person: Person): Unit = {
+    println(person)
   }
 
 }
