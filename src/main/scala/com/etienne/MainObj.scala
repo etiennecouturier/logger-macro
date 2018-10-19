@@ -1,7 +1,7 @@
-package main.scala.com.etienne
+package com.etienne
 
-import com.etienne.logger.clazz.{ClassLoggerTest, NoLogging}
 import com.etienne.logger.method.MethodLogger
+import main.scala.com.etienne.Person
 
 object MainObj extends App {
   //  val cle = new ClassLogginExample
@@ -14,7 +14,7 @@ object MainObj extends App {
   //  ClassLogginExample.noLog()
 
   val l = new ClassLogginExample()
-//  l.noLog(Person("", 5))
+  //  l.noLog(Person("", 5))
   l.controllerMethod()
 }
 
@@ -34,19 +34,19 @@ class ClassLogginExample {
   }
 
   //  @NoLogging
-//  @MethodLogger
+  //  @MethodLogger
   def noLog(person: Person): Unit = {
     println(person)
   }
 
   @MethodLogger
   def controllerMethod(): String = {
-    authorized("test", (a, b) => a*b)
+    authorized("test", (a, b) => a.age * b.age)
     ""
   }
 
-  def authorized(s: String, f: (Int, Int) => Int): Int = {
-    f(2, 3)
+  def authorized(s: String, f: (Person, Person) => Int): Int = {
+    f(Person("", 2), Person("", 3))
   }
 
 }
