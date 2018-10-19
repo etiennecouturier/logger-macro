@@ -1,4 +1,4 @@
-package com.etienne
+package main.scala.com.etienne
 
 object LoggingExample {
 

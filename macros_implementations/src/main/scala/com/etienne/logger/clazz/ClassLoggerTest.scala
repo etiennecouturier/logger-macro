@@ -20,16 +20,17 @@ object ClassLoggerTest {
           val decoratedStats =
             stats map {
               case method@DefDef(mo@Modifiers(_, _, _), methodName, tpes, paramLists: scala.List[scala.List[ValDef]], returnType, body) =>
-                println(showRaw(method))
+//                println(showRaw(method))
                 val k = method.find(t =>
                   if (t.isTerm) {
-                    println(show(t.tpe))
+//                    println(show(t.tpe))
                     t.tpe == "Person"
                   } else {
                     false
                   }
                 )
-                println(k)
+                println("during compilation")
+//                println(k)
                 //              val tn = Ident(TermName("Person").toTypeName
                 //              println("-----------------" + showRaw(method) + "-----------------")
                 q"""$mo def $methodName[..$tpes](...$paramLists): $returnType =  {
@@ -37,7 +38,7 @@ object ClassLoggerTest {
                 $body
               }"""
               case other =>
-                println("other stuff")
+//                println("other stuff")
                 other
             }
           q"""$mod class $tpname[..$tparams] $ctorMods(...$paramss) {

@@ -1,25 +1,28 @@
-package com.etienne
+package main.scala.com.etienne
 
-import com.etienne.logger.clazz.{ClassLogger, ClassLoggerTest, NoLogging}
+import com.etienne.logger.clazz.{ClassLoggerTest, NoLogging}
+import com.etienne.logger.method.MethodLogger
 
 object MainObj extends App {
-//  val cle = new ClassLogginExample
-//  cle.help("help")(3)
-//  cle.wanted()
-//  cle.noLog()
+  //  val cle = new ClassLogginExample
+  //  cle.help("help")(3)
+  //  cle.wanted()
+  //  cle.noLog()
 
-//  ClassLogginExample.help("help")(3)
-//  ClassLogginExample.wanted()
-//  ClassLogginExample.noLog()
+  //  ClassLogginExample.help("help")(3)
+  //  ClassLogginExample.wanted()
+  //  ClassLogginExample.noLog()
 
   val l = new ClassLogginExample()
+//  l.noLog(Person("", 5))
+  l.controllerMethod()
 }
 
-@ClassLoggerTest
+//@ClassLoggerTest
 class ClassLogginExample {
 
-//  import play.api.Logger
-//  private val hallo = Logger(this.getClass)
+  //  import play.api.Logger
+  //  private val hallo = Logger(this.getClass)
 
   def help(str: String)(h: Int): Unit = {
     println(str)
@@ -30,9 +33,20 @@ class ClassLogginExample {
     println("wanted")
   }
 
-//  @NoLogging
+  //  @NoLogging
+//  @MethodLogger
   def noLog(person: Person): Unit = {
     println(person)
+  }
+
+  @MethodLogger
+  def controllerMethod(): String = {
+    authorized("test", (a, b) => a*b)
+    ""
+  }
+
+  def authorized(s: String, f: (Int, Int) => Int): Int = {
+    f(2, 3)
   }
 
 }

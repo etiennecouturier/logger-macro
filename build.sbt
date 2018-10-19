@@ -1,4 +1,4 @@
-lazy val macros_implementations = project
+lazy val macros_implementations = project in file("macros_implementations")
 
 lazy val root = (project in file("."))
   .settings(
