@@ -1,3 +1,3 @@
-package main.scala.com.etienne
+package test
 
 case class Person(name: String, age: Int)

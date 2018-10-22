@@ -1,22 +1,21 @@
-package com.etienne
+package test
 
 import com.etienne.logger.method.MethodLogger
-import main.scala.com.etienne.Person
 
-object MainObj extends App {
-  //  val cle = new ClassLogginExample
-  //  cle.help("help")(3)
-  //  cle.wanted()
-  //  cle.noLog()
-
-  //  ClassLogginExample.help("help")(3)
-  //  ClassLogginExample.wanted()
-  //  ClassLogginExample.noLog()
-
-  val l = new ClassLogginExample()
-  //  l.noLog(Person("", 5))
-  l.controllerMethod()
-}
+//object MainObj extends App {
+//  //  val cle = new ClassLogginExample
+//  //  cle.help("help")(3)
+//  //  cle.wanted()
+//  //  cle.noLog()
+//
+//  //  ClassLogginExample.help("help")(3)
+//  //  ClassLogginExample.wanted()
+//  //  ClassLogginExample.noLog()
+//
+//  val l = new ClassLogginExample()
+//  //  l.noLog(Person("", 5))
+//  l.controllerMethod()
+//}
 
 //@ClassLoggerTest
 class ClassLogginExample {

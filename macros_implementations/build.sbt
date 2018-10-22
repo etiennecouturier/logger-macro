@@ -10,5 +10,4 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.2.0-SNAP10"
 )
 
-val paradiseVersion = "2.1.0-M5"
-addCompilerPlugin("org.scalamacros" % "paradise" % paradiseVersion cross CrossVersion.full)
+addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)

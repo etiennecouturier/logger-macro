@@ -7,9 +7,8 @@ lazy val root = (project in file("."))
     version := "1.0",
     scalaVersion := "2.11.7"
   )
+  .enablePlugins(PlayScala)
   .aggregate(macros_implementations)
   .dependsOn(macros_implementations)
-//  .enablePlugins(PlayScala)
 
-val paradiseVersion = "2.1.0-M5"
-addCompilerPlugin("org.scalamacros" % "paradise" % paradiseVersion cross CrossVersion.full)
+addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
