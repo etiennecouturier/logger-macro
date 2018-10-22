@@ -8,7 +8,12 @@ import play.api.mvc.{Action, Controller}
 class HomeController @Inject() extends Controller {
 
   @MethodLogger
-  def index = Action { request =>
+  def index = Action { requ =>
+    Ok("It works!")
+  }
+
+  @MethodLogger
+  def noLog = Action {
     Ok("It works!")
   }
 

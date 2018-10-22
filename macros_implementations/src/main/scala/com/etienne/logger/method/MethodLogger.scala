@@ -33,12 +33,16 @@ object MethodLogger {
 
           val newBody = body match {
             case Apply(stats, Function(ValDef(m, TermName(requestVarName), tpt, rhs) :: Nil, functionBody) :: Nil) =>
+              val request = c.parse(requestVarName)
               val newFunctionBody: Tree =
                 q"""
-                   println(${c.parse(requestVarName)}.host)
+                   println($request.remoteAddress)
+                   println($request.headers.headers)
+                   println($request.queryString)
+                   println($request.body)
                   $functionBody
                   """
-              Apply(stats, Function(ValDef(m, TermName("request"), tpt, rhs) :: Nil, newFunctionBody) :: Nil)
+              Apply(stats, Function(ValDef(m, TermName(requestVarName), tpt, rhs) :: Nil, newFunctionBody) :: Nil)
             case d => d
           }
 

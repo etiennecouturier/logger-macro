@@ -1,1 +1,2 @@
 GET     /count                           controllers.HomeController.index
+GET     /nolog                           controllers.HomeController.noLog
