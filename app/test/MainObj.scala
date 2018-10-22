@@ -1,6 +1,6 @@
 package test
 
-import com.etienne.logger.method.MethodLogger
+import com.etienne.logger.method.ControllerMethodLogger
 
 //object MainObj extends App {
 //  //  val cle = new ClassLogginExample

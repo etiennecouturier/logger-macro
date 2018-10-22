@@ -1,2 +1,3 @@
-GET     /count                           controllers.HomeController.index
-GET     /nolog                           controllers.HomeController.noLog
+#GET     /count                           controllers.HomeController.index
+#GET     /nolog                           controllers.HomeController.noLog
+GET     /auth                            controllers.HomeController.withAuth

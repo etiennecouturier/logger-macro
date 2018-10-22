@@ -11,4 +11,8 @@ lazy val root = (project in file("."))
   .aggregate(macros_implementations)
   .dependsOn(macros_implementations)
 
+libraryDependencies ++= Seq(
+  "lu.foyer" %% "foyer-auth-v25" % "1.4.0"
+)
+
 addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)

@@ -1,20 +1,29 @@
 package controllers
 
-import com.etienne.logger.method.MethodLogger
+import com.etienne.logger.method.ControllerMethodLogger
 import javax.inject._
-import play.api.mvc.{Action, Controller}
+import lu.foyer.play.auth.authz.{AuthorizationService, Authorized}
+import play.api.mvc.{Action, AnyContent, Controller}
+
+import scala.concurrent.Future
 
 @Singleton
-class HomeController @Inject() extends Controller {
+class HomeController @Inject() (implicit auth: AuthorizationService) extends Controller {
 
-  @MethodLogger
+  @ControllerMethodLogger
   def index = Action { requ =>
     Ok("It works!")
   }
 
-  @MethodLogger
+  @ControllerMethodLogger
   def noLog = Action {
     Ok("It works!")
   }
+
+  @ControllerMethodLogger
+  def withAuth: Action[AnyContent] =
+    Authorized.async("urn:api:prestations-medicales:surcouche:hello", "read") { implicit request =>
+      Future.successful(Ok("It works!"))
+    }
 
 }
