@@ -38,7 +38,7 @@ class ClassLogginExample {
     println(person)
   }
 
-  @MethodLogger
+//  @MethodLogger
   def controllerMethod(): String = {
     authorized("test", (a, b) => a.age * b.age)
     ""

@@ -31,21 +31,24 @@ object MethodLogger {
              """
             }
 
-          val funcParam = body.find{
-            case f@Function(_) => {
-              f.vparams.foreach(println)
-              true
-            }
-            case _ => false
+          val newBody = body match {
+            case Apply(stats, Function(ValDef(m, TermName(requestVarName), tpt, rhs) :: Nil, functionBody) :: Nil) =>
+              val newFunctionBody: Tree =
+                q"""
+                   println(${c.parse(requestVarName)}.host)
+                  $functionBody
+                  """
+              Apply(stats, Function(ValDef(m, TermName("request"), tpt, rhs) :: Nil, newFunctionBody) :: Nil)
+            case d => d
           }
 
-          println(funcParam)
+          println(newBody)
 
           q"""$mods def $methodName[..$tpes](...$paramLists): $returnType =  {
             print("Method called: ")
             println(${methodName.decodedName.toString})
             $paramQuote
-            $body
+            $newBody
           }"""
         case _ => c.abort(c.enclosingPosition, "Annotation @Benchmark can be used only with methods")
       }
