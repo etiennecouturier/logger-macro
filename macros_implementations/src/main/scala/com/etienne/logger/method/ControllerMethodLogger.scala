@@ -46,8 +46,6 @@ object ControllerMethodLogger {
             case d => d
           }
 
-          println(newBody)
-
           q"""$mods def $methodName[..$tpes](...$paramLists): $returnType =  {
             print("Method called: ")
             println(${methodName.decodedName.toString})

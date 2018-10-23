@@ -1,6 +1,5 @@
 package controllers
 
-import com.etienne.logger.clazz.ControllerLogger
 import javax.inject._
 import lu.foyer.play.auth.authz.{AuthorizationService, Authorized}
 import play.api.mvc.{Action, AnyContent, Controller}
@@ -8,15 +7,16 @@ import play.api.mvc.{Action, AnyContent, Controller}
 import scala.concurrent.Future
 
 @Singleton
-@ControllerLogger
+//@ControllerLogger
 class HomeController @Inject()(implicit auth: AuthorizationService) extends Controller {
 
-  def index = Action { requ =>
-    Ok("It works!")
+//  @ControllerMethodLogger
+  def index = Action { request =>
+    Ok(request.method)
   }
 
   def noLog = Action {
-    Ok("It works!")
+    Ok("Nolog works!")
   }
 
   def withAuth: Action[AnyContent] =
